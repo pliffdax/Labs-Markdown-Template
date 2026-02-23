@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onDestroy, tick } from "svelte";
   import type { TocItem } from "./toc";
   import { buildToc } from "./toc";
   import { setupScrollSpy } from "./scrollspy";
@@ -13,17 +13,40 @@
   let activeId = "";
   let cleanup: (() => void) | null = null;
 
-  onMount(() => {
+  async function rebuild() {
     if (!articleEl) return;
+
+    // дождаться, пока <svelte:component> реально отрендерится в DOM
+    await tick();
+
+    cleanup?.();
     toc = buildToc(articleEl, config.toc.minDepth, config.toc.maxDepth);
+    activeId = "";
     cleanup = setupScrollSpy(articleEl, (id) => (activeId = id));
-  });
+  }
+
+  // ВАЖНО:
+  // rebuild только когда есть и компонент, и articleEl
+  // (иначе на первом заходе после / toc будет пустым)
+  $: if (Component && articleEl) {
+    void rebuild();
+  }
+
+  // Если title меняется без смены Component — тоже перестроим (не обязательно, но безопасно)
+  $: if (title && Component && articleEl) {
+    // title сменится вместе с Component, но пусть будет
+    void rebuild();
+  }
 
   onDestroy(() => cleanup?.());
 
-  function scrollTo(id: string) {
-    const el = document.getElementById(id);
+  function scrollToId(id: string) {
+    const root = articleEl;
+    if (!root) return;
+
+    const el = root.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
     if (!el) return;
+
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 </script>
@@ -35,12 +58,12 @@
 
     {#if toc.length > 0}
       <nav class="toc">
-        {#each toc as item}
+        {#each toc as item (item.id)}
           <button
             class="toc-item"
             class:active={activeId === item.id}
             style={`margin-left:${(item.depth - config.toc.minDepth) * 12}px`}
-            on:click={() => scrollTo(item.id)}
+            on:click={() => scrollToId(item.id)}
             type="button"
           >
             {item.text}

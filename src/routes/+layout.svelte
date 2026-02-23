@@ -1,23 +1,25 @@
 <script lang="ts">
   import "../app.css";
   import { config, performerTitleLine } from "$lib/site/config";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { resolve, asset } from "$app/paths";
-  import { onMount } from "svelte";
+  import { onMount, type Snippet } from "svelte";
+
+  let { children }: { children: Snippet } = $props();
+
+  const homeHref = resolve("/");
+  const aboutHref = resolve("/about");
+  const labHref = (slug: string) => resolve(`/lab/${slug}` as `/lab/${string}`);
+
+  const photoSrc = config.student.photo ? asset(config.student.photo) : "";
 
   onMount(() => {
     const imgs = Array.from(
       document.querySelectorAll<HTMLImageElement>(".md img"),
     );
-
     for (const img of imgs) {
-      const src = img.getAttribute('src');
-      if (src && src.startsWith('/')) img.src = asset(src);
-
       const markBroken = () => img.classList.add("img-broken");
-
       img.addEventListener("error", markBroken);
-
       if (img.complete && img.naturalWidth === 0) markBroken();
     }
   });
@@ -29,41 +31,39 @@
       <h1 class="cover-title">
         {config.report?.title ?? "ЗВІТИ З ЛАБОРАТОРНИХ РОБІТ"}
       </h1>
+
       {#if config.report?.subjectLine}
         <div class="cover-subtitle">{config.report.subjectLine}</div>
       {/if}
+
       <div class="cover-performer">{performerTitleLine(config.student)}</div>
     </div>
 
-    {#if config.student.photo}
+    {#if photoSrc}
       <div class="cover-photo">
-        <img
-          src={config.student.photo}
-          alt={`Фото: ${config.student.fullName}`}
-        />
+        <img src={photoSrc} alt={`Фото: ${config.student.fullName}`} />
       </div>
     {/if}
   </section>
 
   <nav class="lab-buttons" aria-label="Навігація по роботах">
     {#each config.labs as lab}
-      <a
-        class="lab-btn"
-        class:active={$page.url.pathname.endsWith(`/lab/${lab.slug}`)}
-        href={resolve(`/lab/${lab.slug}`)}
-      >
+      {@const to = labHref(lab.slug)}
+      <a class="lab-btn" class:active={page.url.pathname === to} href={to}>
         {lab.button}
       </a>
     {/each}
   </nav>
 
   <main class="main">
-    <slot />
+    {@render children()}
   </main>
 
   <footer class="footer">
-    <span class="muted">Контент: Markdown у папці <code>content/</code></span>
+    <span class="muted">PLIFFDAX</span>
     <span class="footer-sep">·</span>
-    <a class="footer-link" href={resolve("/about")}>Про шаблон</a>
+    <a class="footer-link" href={aboutHref}>Про шаблон</a>
+    <span class="footer-sep">·</span>
+    <a class="footer-link" href={homeHref}>На головну</a>
   </footer>
 </div>

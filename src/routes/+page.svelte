@@ -1,10 +1,4 @@
-<script lang="ts">
-  import LabView from '$lib/site/LabView.svelte';
-
-  export let data: {
-    lab: { slug: string; title: string; button: string };
-    Component: any;
-  };
-</script>
-
-<LabView title={data.lab.title} Component={data.Component} />
+<div class="paper">
+  <h1 style="margin:0 0 10px 0">Звіти</h1>
+  <p class="muted" style="margin:0">Оберіть лабораторну роботу зверху.</p>
+</div>
