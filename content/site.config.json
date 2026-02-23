@@ -1,0 +1,23 @@
+{
+  "report": {
+    "title": "ЗВІТИ З ЛАБОРАТОРНИХ РОБІТ",
+    "subjectLine": "з дисципліни «WEB-ОРІЄНТОВАНІ ТЕХНОЛОГІЇ. BACKEND РОЗРОБКИ»"
+  },
+  "student": {
+    "fullName": "Прізвище Ім’я По батькові",
+    "group": "Іx-xx",
+    "gender": "male",
+    "photo": "/students/chad.jpg"
+  },
+  "toc": {
+    "minDepth": 2,
+    "maxDepth": 3
+  },
+  "labs": [
+    {
+      "slug": "lab-1",
+      "title": "Лабораторна робота №1",
+      "button": "Лабораторна робота №1"
+    }
+  ]
+}
