@@ -2,6 +2,7 @@
   import "../app.css";
   import { config, performerTitleLine } from "$lib/site/config";
   import { page } from "$app/stores";
+  import { resolve, asset } from "$app/paths";
   import { onMount } from "svelte";
 
   onMount(() => {
@@ -10,6 +11,9 @@
     );
 
     for (const img of imgs) {
+      const src = img.getAttribute('src');
+      if (src && src.startsWith('/')) img.src = asset(src);
+
       const markBroken = () => img.classList.add("img-broken");
 
       img.addEventListener("error", markBroken);
@@ -45,9 +49,8 @@
     {#each config.labs as lab}
       <a
         class="lab-btn"
-        class:active={$page.url.pathname === `/lab/${lab.slug}` ||
-          ($page.url.pathname === "/" && lab.slug === config.labs[0]?.slug)}
-        href={`/lab/${lab.slug}`}
+        class:active={$page.url.pathname.endsWith(`/lab/${lab.slug}`)}
+        href={resolve(`/lab/${lab.slug}`)}
       >
         {lab.button}
       </a>
@@ -61,6 +64,6 @@
   <footer class="footer">
     <span class="muted">Контент: Markdown у папці <code>content/</code></span>
     <span class="footer-sep">·</span>
-    <a class="footer-link" href="/about">Про шаблон</a>
+    <a class="footer-link" href={resolve("/about")}>Про шаблон</a>
   </footer>
 </div>
