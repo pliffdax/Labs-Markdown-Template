@@ -12,7 +12,8 @@ const config = {
     adapter: adapter({ fallback: "404.html" }),
     prerender: { entries: ["*"] },
     paths: {
-      base: process.env.NODE_ENV === "production" ? "/lab-md-template" : "",
+      base:
+        process.env.NODE_ENV === "production" ? "/Labs-Markdown-Template" : "",
     },
   },
 };
