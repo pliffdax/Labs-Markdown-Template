@@ -11,6 +11,7 @@
 html,
 body {
   height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -42,7 +43,7 @@ body {
 }
 
 .container {
-  max-width: 1240px;
+  max-width: 1264px;
   margin: 0 auto;
   padding: 0 16px;
 }
@@ -152,7 +153,7 @@ code {
 
 .doc {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 320px minmax(0, 1fr);
   gap: 16px;
   align-items: start;
 }
@@ -165,8 +166,8 @@ code {
   border: 1px solid var(--paper-border);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.03);
-  max-height: calc(100vh - 40px);
-  overflow: auto;
+  max-height: none;
+  overflow: hidden;
 }
 
 .toc-title {
@@ -229,6 +230,25 @@ code {
   border: 1px solid var(--paper-border);
   border-radius: 18px;
   background: var(--paper);
+}
+
+.md {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.md a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: rgba(122, 162, 255, 0.88);
+  text-decoration: underline;
+  text-decoration-color: rgba(122, 162, 255, 0.28);
+  text-underline-offset: 3px;
+}
+
+.md a:hover {
+  color: var(--accent);
+  text-decoration-color: rgba(122, 162, 255, 0.55);
 }
 
 .md :where(h1, h2, h3, h4) {
