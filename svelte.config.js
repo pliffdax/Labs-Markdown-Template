@@ -1,6 +1,7 @@
 import adapter from "@sveltejs/adapter-static";
 import { mdsvex } from "mdsvex";
 import { rehypeKitPaths } from "./rehype.kit-paths.js";
+import { BASE_PATH } from "./base-path.js";
 
 const config = {
   extensions: [".svelte", ".md"],
@@ -14,8 +15,7 @@ const config = {
     adapter: adapter({ fallback: "404.html" }),
     prerender: { entries: ["*"] },
     paths: {
-      base:
-        process.env.NODE_ENV === "production" ? "/Labs-Markdown-Template" : "",
+      base: BASE_PATH,
     },
   },
 };
